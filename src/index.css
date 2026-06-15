@@ -1,0 +1,318 @@
+@import "tailwindcss";
+
+/* ========== Design Tokens (Tailwind v4 Theme) ========== */
+@theme {
+  --color-cream: #FFF8F1;
+  --color-cream-dark: #FFF0E0;
+  --color-fuchsia: #B8006C;
+  --color-fuchsia-light: #D4187E;
+  --color-fuchsia-dark: #8C0052;
+  --color-pink-cloud: #FFD6E8;
+  --color-cream-cloud: #FFF0D6;
+  --color-card-light: #FFFFFF;
+  --color-card-dark: #2A2A3E;
+  --color-bg-dark: #1A1A2E;
+  --color-bg-dark-secondary: #232340;
+  --color-text-dark: #E0E0F0;
+  --color-muted: #9B8E82;
+  --color-muted-dark: #8888A0;
+  --color-error: #E53E3E;
+  --color-success: #38A169;
+  --font-family-cairo: 'Cairo', sans-serif;
+}
+
+/* ========== Base Styles ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  font-family: var(--font-family-cairo);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== Polka Dot Pattern ========== */
+.polka-dot-bg {
+  background-image: radial-gradient(circle, #f0e0d0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .polka-dot-bg {
+  background-image: radial-gradient(circle, #2A2A3E 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ========== Floating Animations ========== */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+
+  50% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+
+  75% {
+    transform: translateY(-16px) rotate(1deg);
+  }
+}
+
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-reverse {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(14px) rotate(-3deg);
+  }
+}
+
+@keyframes pulse-soft {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 7s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out both;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Staggered fade-in */
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* ========== Glassmorphism Card ========== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-card {
+  background: rgba(42, 42, 62, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ========== Input Focus Glow ========== */
+.input-glow:focus-within {
+  box-shadow: 0 0 0 3px rgba(184, 0, 108, 0.15);
+}
+
+.dark .input-glow:focus-within {
+  box-shadow: 0 0 0 3px rgba(212, 24, 126, 0.25);
+}
+
+/* ========== Button Hover Effect ========== */
+.btn-fuchsia {
+  background: linear-gradient(135deg, #B8006C, #D4187E);
+  transition: all 0.3s ease;
+}
+
+.btn-fuchsia:hover {
+  background: linear-gradient(135deg, #D4187E, #E8308E);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(184, 0, 108, 0.35);
+}
+
+.btn-fuchsia:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(184, 0, 108, 0.25);
+}
+
+/* ========== Loading Spinner ========== */
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #FFFFFF;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== Tab Switcher ========== */
+.tab-active {
+  background: linear-gradient(135deg, #B8006C, #D4187E);
+  color: white;
+  box-shadow: 0 2px 10px rgba(184, 0, 108, 0.3);
+}
+
+.tab-inactive {
+  color: #9B8E82;
+  transition: color 0.2s ease;
+}
+
+.tab-inactive:hover {
+  color: #B8006C;
+}
+
+.dark .tab-inactive {
+  color: #8888A0;
+}
+
+.dark .tab-inactive:hover {
+  color: #D4187E;
+}
+
+/* ========== Scrollbar Styling ========== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 0, 108, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(184, 0, 108, 0.4);
+}
+
+/* ========== Select Dropdown ========== */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239B8E82' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+}
+
+[dir="ltr"] select {
+  background-position: right 12px center;
+}
+
+/* ========== Success Message ========== */
+.success-checkmark {
+  display: inline-block;
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========== Reusable Layout Utilities ========== */
+@utility page-container {
+  @apply w-full min-h-screen p-4 sm:p-6 md:p-8;
+}
+
+@utility card {
+  @apply bg-white dark:bg-[#2A2A3E] rounded-2xl p-5 sm:p-6 shadow-md;
+}
+
+@utility section-gap {
+  @apply mb-6;
+}
+
+@utility field-gap {
+  @apply space-y-4;
+}

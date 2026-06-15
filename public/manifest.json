@@ -1,0 +1,18 @@
+{
+  "name": "تطبيق كرنفال المحبة",
+  "short_name": "كرنفال المحبة",
+  "description": "نظام إدارة حركة مجموعات الأطفال لكرنفال المحبة - كنيسة مارمرقس بإمبابة",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff8f1",
+  "theme_color": "#b8006c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
