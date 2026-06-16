@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 // Audio alert utility using Web Audio API for station transitions
 const playAlertSound = (type = 'chime') => {
@@ -77,7 +77,6 @@ export default function TeamLeaderDashboard() {
   const [timerSeconds, setTimerSeconds] = useState(0);
 
   // Actions & UI feedback
-  const [arrivalSuccess, setArrivalSuccess] = useState(false);
   const [submittingArrival, setSubmittingArrival] = useState(false);
   const [actionLoadingChild, setActionLoadingChild] = useState(false);
   const [toastMsg, setToastMsg] = useState(null);
@@ -177,10 +176,12 @@ export default function TeamLeaderDashboard() {
 
   // Poll live schedule data and fetch everything initially
   useEffect(() => {
-    fetchSchedule();
-    fetchChildren();
-    fetchArrivals();
-    fetchMessages();
+    Promise.resolve().then(() => {
+      fetchSchedule();
+      fetchChildren();
+      fetchArrivals();
+      fetchMessages();
+    });
   }, [fetchSchedule, fetchChildren, fetchArrivals, fetchMessages]);
 
   // Countdown timer local effect with Audio + Visual Alerts for transition
@@ -239,7 +240,6 @@ export default function TeamLeaderDashboard() {
     setSubmittingArrival(true);
     try {
       await axios.post(`${API_BASE}/arrivals`, { teamId, stationId });
-      setArrivalSuccess(true);
       showToast(isAr ? 'تم تأكيد الوصول بنجاح! ✓' : 'Arrival confirmed successfully! ✓');
       fetchArrivals();
     } catch (err) {

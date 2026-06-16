@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 // Team colors fallback hex mapping
 const COLOR_HEX_MAP = {
@@ -116,10 +116,12 @@ export default function AdminDashboard() {
 
   // Load all data
   useEffect(() => {
-    fetchLiveStatuses();
-    fetchStats();
-    fetchMessages();
-    fetchTimeline();
+    Promise.resolve().then(() => {
+      fetchLiveStatuses();
+      fetchStats();
+      fetchMessages();
+      fetchTimeline();
+    });
   }, [fetchLiveStatuses, fetchStats, fetchMessages, fetchTimeline]);
 
   // Global ticked countdown interval for all teams

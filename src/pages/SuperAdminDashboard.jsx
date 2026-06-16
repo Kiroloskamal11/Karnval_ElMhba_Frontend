@@ -1,21 +1,31 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
-const COLOR_HEX_MAP = {
-  RED: '#EF4444',
-  BLUE: '#3B82F6',
-  YELLOW: '#EAB308',
-  GREEN: '#22C55E',
-  PINK: '#EC4899',
-  WHITE: '#F8FAFC'
-};
+const Spinner = () => (
+  <div className="flex items-center justify-center py-8">
+    <div className="w-8 h-8 border-3 border-[#B8006C] border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
+
+const Card = ({ children, className = '', darkMode }) => (
+  <div
+    className={`rounded-2xl p-5 sm:p-6 transition-all duration-300 ${className}`}
+    style={{
+      background: darkMode ? '#2A2A3E' : '#FFFFFF',
+      border: '2px solid rgba(184,0,108,0.12)',
+      boxShadow: '0 4px 24px rgba(184,0,108,0.06)',
+    }}
+  >
+    {children}
+  </div>
+);
 
 export default function SuperAdminDashboard() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { logout, user, darkMode, toggleDarkMode, toggleLanguage } = useAuth();
   const isAr = i18n.language === 'ar';
 
@@ -174,14 +184,16 @@ export default function SuperAdminDashboard() {
 
   // Load all initial data on mount
   useEffect(() => {
-    fetchPending();
-    fetchAll();
-    fetchTeams();
-    fetchStations();
-    fetchEventConfig();
-    fetchSchedule();
-    fetchMessages();
-    fetchTimeline();
+    Promise.resolve().then(() => {
+      fetchPending();
+      fetchAll();
+      fetchTeams();
+      fetchStations();
+      fetchEventConfig();
+      fetchSchedule();
+      fetchMessages();
+      fetchTimeline();
+    });
   }, [fetchPending, fetchAll, fetchTeams, fetchStations, fetchEventConfig, fetchSchedule, fetchMessages, fetchTimeline]);
 
   // Clear toast feedback automatically
@@ -435,9 +447,11 @@ export default function SuperAdminDashboard() {
 
   useEffect(() => {
     if (eventConfig) {
-      setCfgEventName(eventConfig.eventName || '');
-      setCfgEventDate(eventConfig.eventDate || '');
-      setCfgAlertMinutes(eventConfig.alertMinutes || 5);
+      Promise.resolve().then(() => {
+        setCfgEventName(eventConfig.eventName || '');
+        setCfgEventDate(eventConfig.eventDate || '');
+        setCfgAlertMinutes(eventConfig.alertMinutes || 5);
+      });
     }
   }, [eventConfig]);
 
@@ -530,24 +544,6 @@ export default function SuperAdminDashboard() {
     );
   };
 
-  const Spinner = useMemo(() => () => (
-    <div className="flex items-center justify-center py-8">
-      <div className="w-8 h-8 border-3 border-[#B8006C] border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  ), []);
-
-  const Card = useMemo(() => ({ children, className = '' }) => (
-    <div
-      className={`rounded-2xl p-5 sm:p-6 transition-all duration-300 ${className}`}
-      style={{
-        background: darkMode ? '#2A2A3E' : '#FFFFFF',
-        border: '2px solid rgba(184,0,108,0.12)',
-        boxShadow: '0 4px 24px rgba(184,0,108,0.06)',
-      }}
-    >
-      {children}
-    </div>
-  ), [darkMode]);
 
   return (
     <div
@@ -710,7 +706,7 @@ export default function SuperAdminDashboard() {
         {activeTab === 'users' && (
           <div className="space-y-6 animate-fade-in-up">
             {/* Pending Approvals Section */}
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-9 h-9 rounded-xl bg-yellow-100 dark:bg-yellow-900/40 flex items-center justify-center">
                   <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-xl">pending_actions</span>
@@ -832,7 +828,7 @@ export default function SuperAdminDashboard() {
             </Card>
 
             {/* Users Directory List */}
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center justify-between gap-3 mb-5">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-fuchsia/10 dark:bg-fuchsia/20 flex items-center justify-center">
@@ -921,7 +917,7 @@ export default function SuperAdminDashboard() {
         {/* ========================================== */}
         {activeTab === 'teams' && (
           <div className="space-y-6 animate-fade-in-up">
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center justify-between gap-3 mb-5">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-fuchsia/10 dark:bg-fuchsia/20 flex items-center justify-center">
@@ -1000,7 +996,7 @@ export default function SuperAdminDashboard() {
         {/* ========================================== */}
         {activeTab === 'stations' && (
           <div className="space-y-6 animate-fade-in-up">
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center justify-between gap-3 mb-5">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-fuchsia/10 dark:bg-fuchsia/20 flex items-center justify-center">
@@ -1081,7 +1077,7 @@ export default function SuperAdminDashboard() {
         {activeTab === 'schedule' && (
           <div className="space-y-6 animate-fade-in-up">
             {/* Event Configurations Form */}
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-9 h-9 rounded-xl bg-fuchsia/10 dark:bg-fuchsia/20 flex items-center justify-center">
                   <span className="material-symbols-outlined text-fuchsia text-xl">settings</span>
@@ -1150,7 +1146,7 @@ export default function SuperAdminDashboard() {
             </Card>
 
             {/* Timetable schedule slot list */}
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-9 h-9 rounded-xl bg-fuchsia/10 dark:bg-fuchsia/20 flex items-center justify-center">
                   <span className="material-symbols-outlined text-fuchsia text-xl">calendar_month</span>
@@ -1228,7 +1224,7 @@ export default function SuperAdminDashboard() {
             </Card>
 
             {/* ================== TIMELINE OF MOVEMENTS ================== */}
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 flex items-center justify-center">
                   <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-2xl">history</span>
@@ -1303,7 +1299,7 @@ export default function SuperAdminDashboard() {
         {/* ========================================== */}
         {activeTab === 'messages' && (
           <div className="space-y-6 animate-fade-in-up">
-            <Card>
+            <Card darkMode={darkMode}>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-fuchsia/10 dark:bg-fuchsia/20 flex items-center justify-center">
                   <span className="material-symbols-outlined text-fuchsia text-2xl">campaign</span>

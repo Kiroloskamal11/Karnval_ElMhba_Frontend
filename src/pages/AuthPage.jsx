@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5ZGRocnVzcnh5cmNveWVhbHVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MTg4OTQsImV4cCI6MjA5NjM5NDg5NH0.MZFdwJG-3WELvklpHnEoI5oJN8F0xF71aINb4jJqhrg';
 
 export default function AuthPage() {
@@ -50,8 +50,10 @@ export default function AuthPage() {
 
   // Clear errors on tab switch
   useEffect(() => {
-    setError('');
-    setRegisterSuccess(false);
+    Promise.resolve().then(() => {
+      setError('');
+      setRegisterSuccess(false);
+    });
   }, [activeTab]);
 
   async function handleLogin(e) {

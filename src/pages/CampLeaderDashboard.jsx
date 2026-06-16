@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 export default function CampLeaderDashboard() {
   const { i18n } = useTranslation();
@@ -117,14 +117,18 @@ export default function CampLeaderDashboard() {
 
   // Load Initial Data
   useEffect(() => {
-    fetchStation();
-    fetchMessages();
+    Promise.resolve().then(() => {
+      fetchStation();
+      fetchMessages();
+    });
   }, [fetchStation, fetchMessages]);
 
   // Fetch live schedule after station details are available
   useEffect(() => {
     if (station?.name) {
-      fetchLiveStatus(station.name);
+      Promise.resolve().then(() => {
+        fetchLiveStatus(station.name);
+      });
     }
   }, [station, fetchLiveStatus]);
 

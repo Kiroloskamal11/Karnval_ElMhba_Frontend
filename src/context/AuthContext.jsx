@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 // Configure axios interceptor to automatically attach authorization header
 axios.interceptors.request.use(
@@ -20,6 +20,7 @@ axios.interceptors.request.use(
 
 const AuthContext = createContext(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
@@ -30,36 +31,32 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const { i18n } = useTranslation();
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('karneval_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [token, setToken] = useState(() => localStorage.getItem('karneval_token'));
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('karneval_dark') === 'true');
 
   // Load persisted state on mount
   useEffect(() => {
     try {
-      const savedToken = localStorage.getItem('karneval_token');
-      const savedUser = localStorage.getItem('karneval_user');
       const savedLang = localStorage.getItem('karneval_lang');
-      const savedDark = localStorage.getItem('karneval_dark');
-
-      if (savedToken && savedUser) {
-        setToken(savedToken);
-        setUser(JSON.parse(savedUser));
-      }
       if (savedLang) {
         i18n.changeLanguage(savedLang);
-      }
-      if (savedDark === 'true') {
-        setDarkMode(true);
       }
     } catch {
       // If localStorage is corrupted, just start fresh
       localStorage.removeItem('karneval_token');
       localStorage.removeItem('karneval_user');
     }
-    setLoading(false);
-  }, []);
+    Promise.resolve().then(() => setLoading(false));
+  }, [i18n]);
 
   // Sync dark mode class on <html>
   useEffect(() => {
@@ -132,4 +129,3 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export default AuthContext;
